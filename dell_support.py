@@ -81,7 +81,7 @@ import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
@@ -99,7 +99,7 @@ if not re.match(valid, service_tag):
     sys.exit(1)
 
 # If your system Firefox is older than 47.0.1, specify a newer version:
-#binary = FirefoxBinary('/home/user/Downloads/firefox/firefox')
+# binary = FirefoxBinary('/home/user/Downloads/firefox/firefox')
 binary = FirefoxBinary('firefox')
 
 # Start up web driver
@@ -112,11 +112,11 @@ elem_tag.send_keys(service_tag)
 elem_tag.send_keys(Keys.RETURN)
 
 WebDriverWait(driver, 10)\
-    .until(EC.presence_of_element_located((By.CLASS_NAME, "uif5_btnTxt")))\
+    .until(ec.presence_of_element_located((By.CLASS_NAME, "uif5_btnTxt")))\
     .click()
 
 WebDriverWait(driver, 10)\
-    .until(EC.presence_of_element_located((By.ID, "CompanyName")))\
+    .until(ec.presence_of_element_located((By.ID, "CompanyName")))\
     .send_keys(form_details.company)
 
 driver.find_element_by_id("StreetAddress").send_keys(form_details.address0)
@@ -138,7 +138,7 @@ driver.find_element_by_id("SecondaryConfirmEmail").send_keys(form_details.second
 driver.find_element_by_id("btnContinue").click()
 
 Select(WebDriverWait(driver, 10)
-       .until(EC.presence_of_element_located((By.ID, "IncidentTypeID"))))\
+       .until(ec.presence_of_element_located((By.ID, "IncidentTypeID"))))\
     .select_by_value(form_details.incident_type)
 
 Select(driver.find_element_by_id("NewOperatingSystem")).select_by_value("LINUX - OS")
