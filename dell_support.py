@@ -3,7 +3,7 @@
 Dell support request creator
 Dylan Graham 2016
 
-Usage: dell_support.py <SERVICE TAG>
+Usage: dell_support.py <SERVICE TAG> [--force]
 
 Depends on Firefox and Selenium
 'pip3 install selenium'
@@ -86,9 +86,14 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 
+force = False
+
 if len(sys.argv) < 2:
     print(__doc__)
     sys.exit(1)
+elif len(sys.argv) == 3:
+    if sys.argv[2] == '--force':
+        force = True
 
 service_tag = sys.argv[1]
 
@@ -111,13 +116,11 @@ elem_tag = driver.find_element_by_id("ServiceTag")
 elem_tag.send_keys(service_tag)
 elem_tag.send_keys(Keys.RETURN)
 
-WebDriverWait(driver, 10)\
-    .until(ec.presence_of_element_located((By.CLASS_NAME, "uif5_btnTxt")))\
-    .click()
+WebDriverWait(driver, 10).until(ec.presence_of_element_located(
+    (By.CLASS_NAME, "uif5_btnTxt"))).click()
 
-WebDriverWait(driver, 10)\
-    .until(ec.presence_of_element_located((By.ID, "CompanyName")))\
-    .send_keys(form_details.company)
+WebDriverWait(driver, 10).until(ec.presence_of_element_located(
+    (By.ID, "CompanyName"))).send_keys(form_details.company)
 
 driver.find_element_by_id("StreetAddress").send_keys(form_details.address0)
 driver.find_element_by_id("StreetAddress1").send_keys(form_details.address1)
@@ -138,11 +141,16 @@ driver.find_element_by_id("SecondaryConfirmEmail").send_keys(form_details.second
 driver.find_element_by_id("btnContinue").click()
 
 Select(WebDriverWait(driver, 10)
-       .until(ec.presence_of_element_located((By.ID, "IncidentTypeID"))))\
-    .select_by_value(form_details.incident_type)
+       .until(ec.presence_of_element_located(
+        (By.ID, "IncidentTypeID")))).select_by_value(form_details.incident_type)
 
 Select(driver.find_element_by_id("NewOperatingSystem")).select_by_value("LINUX - OS")
 Select(driver.find_element_by_id("NewOperatingSystemVersion")).select_by_value("LINUX - OS_ALL")
 driver.find_element_by_id("ProblemDetails").send_keys(form_details.problem_details)
 driver.find_element_by_id("ErrorMessage").send_keys(form_details.error_message)
 driver.find_element_by_id("TroubleshootingSteps").send_keys(form_details.troubleshoot)
+
+if force:
+    driver.find_element_by_id("btnContinue").click()
+    if WebDriverWait(driver, 10).until(ec.presence_of_element_located((By.ID, "sce_submittedHeading"))):
+        driver.quit()
