@@ -41,6 +41,7 @@ Create 'form_details.py' containing your contact details/support information:
 
 ## Incident types
 Incident types can be:
+
     'Audio'
     'Audio_Speakers'
     'Battery'
