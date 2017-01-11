@@ -7,6 +7,7 @@ SERVICE_TAG: Dell Service Tag consisting of 7 alphanumeric characters
 
 ## Dependencies
 Firefox, Selenium and Click
+
     pip3 install selenium
     pip3 install click
 
